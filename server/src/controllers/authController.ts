@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
-import { sendOTP, checkOTP } from "../services/twilioService.js";
+import User from "../models/User";
+import { sendOTP, checkOTP } from "../services/twilioService";
 
 export async function requestOTP(req: Request, res: Response) {
   try {

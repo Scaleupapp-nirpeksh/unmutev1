@@ -4,7 +4,7 @@ import http from "http";
 import { Server as SocketServer } from "socket.io";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import authRoutes from "./routes/auth.js";
+import authRoutes from "./routes/auth";
 
 dotenv.config();
 
