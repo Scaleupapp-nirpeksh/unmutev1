@@ -1,12 +1,16 @@
+
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
 import http from "http";
 import { Server as SocketServer } from "socket.io";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
+//import dotenv from "dotenv";
 import authRoutes from "./routes/auth";
+import { authRequired } from "./middlewares/authMiddleware";
 
-dotenv.config();
+//dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
@@ -17,6 +21,9 @@ app.use(express.json());
 
 app.get("/health", (_, res) => res.json({ status: "ok" }));
 app.use("/auth", authRoutes);
+app.get("/me", authRequired, (req, res) => {
+    res.json({ uid: (req.user as any).uid });
+  });
 
 mongoose.connect(process.env.MONGO_URI!).then(() => {
   console.log("MongoDB connected");
