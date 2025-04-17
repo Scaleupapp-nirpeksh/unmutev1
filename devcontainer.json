@@ -1,0 +1,22 @@
+{
+    "name": "Unmute DevContainer",
+    "dockerComposeFile": "./infra/docker-compose.yml",
+    "service": "backend",
+    "workspaceFolder": "/app",
+    "customizations": {
+      "vscode": {
+        "settings": {
+          "terminal.integrated.defaultProfile.linux": "bash",
+          "editor.formatOnSave": true
+        },
+        "extensions": [
+          "dbaeumer.vscode-eslint",
+          "esbenp.prettier-vscode",
+          "formulahendry.auto-close-tag",
+          "prisma.prisma",
+          "ms-azuretools.vscode-docker"
+        ]
+      }
+    }
+  }
+  
