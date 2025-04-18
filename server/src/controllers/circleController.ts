@@ -1,6 +1,6 @@
 // server/src/controllers/circleController.ts   – join + feed
 import Circle from "../models/Circle";
-import Vent from "../models/Vent";
+import { Vent } from "../models/Vent"; // Fixed: Using named import instead of default import
 import { Request, Response } from "express";
 
 export async function joinCircle(req: Request, res: Response) {
