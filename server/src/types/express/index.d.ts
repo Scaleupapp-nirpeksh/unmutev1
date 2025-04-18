@@ -1,7 +1,10 @@
 import { JwtPayload } from "jsonwebtoken";
+import { Types } from "mongoose";
 
-declare module "express-serve-static-core" {
-  interface Request {
-    user?: string | JwtPayload;
+declare global {
+  namespace Express {
+    interface Request {
+      user: JwtPayload & { userId: Types.ObjectId };
+    }
   }
 }

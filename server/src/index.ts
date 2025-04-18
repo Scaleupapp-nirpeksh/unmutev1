@@ -14,7 +14,7 @@ import { Server as SocketServer } from "socket.io";
 
 // ESM default‐exports for each router:
 import authRoutes   from "./routes/auth";
-import ventRoutes   from "./routes/vent";
+import ventRoutes from "./routes/vent";
 import circleRoutes from "./routes/circle";
 import buddyRoutes  from "./routes/buddy";
 import userRoutes   from "./routes/user";            // ← NEW
@@ -37,7 +37,7 @@ app.get("/health", (_req, res) => res.json({ status: "ok" }));
 app.use("/auth", authRoutes);
 
 // Protected resources
-app.use("/vent",   authRequired, ventRoutes);
+app.use("/vent", authRequired, ventRoutes);
 app.use("/circle", authRequired, circleRoutes);
 app.use("/buddy",  authRequired, buddyRoutes);
 app.use("/user",   authRequired, userRoutes);      // ← NEW
