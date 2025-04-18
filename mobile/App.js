@@ -9,6 +9,10 @@ import * as SecureStore from "expo-secure-store";
 import { StatusBar } from "react-native";
 import Toast from "react-native-toast-message";
 
+// Context Providers
+import { AuthProvider } from "./src/context/AuthContext";
+import { AppProvider } from "./src/context/AppContext";
+
 // Auth Screens
 import WelcomeScreen from "./src/screens/WelcomeScreen";
 import PhoneScreen from "./src/screens/PhoneScreen";
@@ -24,7 +28,7 @@ import HomeScreen from "./src/screens/HomeScreen";
 //import ProfileScreen from "./src/screens/ProfileScreen";
 
 // Detail Screens
-//import CreateVentScreen from "./src/screens/CreateVentScreen";
+import CreateVentScreen from "./src/screens/CreateVentScreen";
 //import VentDetailScreen from "./src/screens/VentDetailScreen";
 //import CreateJournalScreen from "./src/screens/CreateJournalScreen";
 //import JournalDetailScreen from "./src/screens/JournalDetailScreen";
@@ -46,6 +50,14 @@ function MainTabs() {
       tabBar={props => <BottomTabBar {...props} currentScreen={props.state.routes[props.state.index].name} />}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
+      {/*
+      <Tab.Screen name="Vents" component={VentsScreen} />
+  */}
+      <Tab.Screen name="CreateVent" component={CreateVentScreen} options={{ tabBarButton: () => null }} />
+      {/*
+      <Tab.Screen name="Journal" component={JournalScreen} />
+      <Tab.Screen name="Matches" component={MatchesScreen} />
+*/}
     </Tab.Navigator>
   );
 }
@@ -75,30 +87,39 @@ export default function App() {
   }
 
   return (
-    <>
-      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName={initialRoute}
-          screenOptions={{ headerShown: false }}
-        >
-          {/* Auth Flow */}
-          <Stack.Screen name="Welcome" component={WelcomeScreen} />
-          <Stack.Screen name="Phone" component={PhoneScreen} />
-          <Stack.Screen name="OTP" component={OtpScreen} />
-          <Stack.Screen name="CompleteProfile" component={CompleteProfileScreen} />
-          
-          {/* Main App Flow */}
-          <Stack.Screen name="Main" component={MainTabs} />
-          
-          {/* Additional Screens (outside the tab navigation) */}
-          
-
-        </Stack.Navigator>
-      </NavigationContainer>
-      
-      {/* Global Toast Message Handler */}
-      <Toast />
-    </>
+    <AuthProvider>
+      <AppProvider>
+        <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName={initialRoute}
+            screenOptions={{ headerShown: false }}
+          >
+            {/* Auth Flow */}
+            <Stack.Screen name="Welcome" component={WelcomeScreen} />
+            <Stack.Screen name="Phone" component={PhoneScreen} />
+            <Stack.Screen name="OTP" component={OtpScreen} />
+            <Stack.Screen name="CompleteProfile" component={CompleteProfileScreen} />
+            
+            {/* Main App Flow */}
+            <Stack.Screen name="Main" component={MainTabs} />
+            
+            {/* Additional Screens (outside the tab navigation) */}
+          {/* <Stack.Screen name="VentDetail" component={VentDetailScreen} />
+            <Stack.Screen name="CreateJournal" component={CreateJournalScreen} />
+            <Stack.Screen name="JournalDetail" component={JournalDetailScreen} />
+            <Stack.Screen name="Prompts" component={PromptsScreen} />
+            <Stack.Screen name="MatchDetail" component={MatchDetailScreen} />
+            <Stack.Screen name="Circles" component={CirclesScreen} />
+            <Stack.Screen name="CircleDetail" component={CircleDetailScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
+  */}
+          </Stack.Navigator>
+        </NavigationContainer>
+        
+        {/* Global Toast Message Handler */}
+        <Toast />
+      </AppProvider>
+    </AuthProvider>
   );
 }
