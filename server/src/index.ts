@@ -1,3 +1,7 @@
+/**
+ * File: server/src/index.ts
+ * Entry point: wire up express, Mongo, socket.io and all routers
+ */
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -8,14 +12,15 @@ import http from "http";
 import mongoose from "mongoose";
 import { Server as SocketServer } from "socket.io";
 
-// Require all route modules (grab the default export)
-const authRoutes   = require("./routes/auth").default;
-const ventRoutes   = require("./routes/vent").default;
-const circleRoutes = require("./routes/circle").default;
-const buddyRoutes  = require("./routes/buddy").default;
+// ESM default‐exports for each router:
+import authRoutes   from "./routes/auth";
+import ventRoutes   from "./routes/vent";
+import circleRoutes from "./routes/circle";
+import buddyRoutes  from "./routes/buddy";
+import userRoutes   from "./routes/user";            // ← NEW
 
-// Require auth middleware
-const { authRequired } = require("./middlewares/authMiddleware");
+// Auth middleware
+import { authRequired } from "./middlewares/authMiddleware";
 
 const app    = express();
 const server = http.createServer(app);
@@ -28,21 +33,24 @@ app.use(express.json());
 // Health check
 app.get("/health", (_req, res) => res.json({ status: "ok" }));
 
-// Mount routers
+// Public routes
 app.use("/auth", authRoutes);
-app.use("/vent", ventRoutes);
-app.use("/circle", circleRoutes);
-app.use("/buddy", buddyRoutes);
 
-// Protected sample endpoint
+// Protected resources
+app.use("/vent",   authRequired, ventRoutes);
+app.use("/circle", authRequired, circleRoutes);
+app.use("/buddy",  authRequired, buddyRoutes);
+app.use("/user",   authRequired, userRoutes);      // ← NEW
+
+// Example “who am I” endpoint
 app.get("/me", authRequired, (req, res) => {
-  res.json({ uid: (req.user as any).uid });
+  res.json({ userId: (req.user as any).userId });
 });
 
-// Connect to MongoDB & start server
+// Connect to MongoDB & start HTTP+Socket.IO server
 const mongoUri = process.env.MONGO_URI;
 if (!mongoUri) {
-  console.error("❌  MONGO_URI missing in .env");
+  console.error("❌  MONGO_URI missing");
   process.exit(1);
 }
 
@@ -54,6 +62,8 @@ mongoose
     server.listen(port, () => console.log(`🚀  Listening on http://localhost:${port}`));
   })
   .catch((err) => {
-    console.error("❌  MongoDB connection error:", err);
+    console.error("❌  Mongo connection error:", err);
     process.exit(1);
   });
+
+
